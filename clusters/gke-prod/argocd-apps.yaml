@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: "https://github.com/sumitgora/gcp-gke-demo.git"
+    repoURL: "https://github.com/sumitgora/wordpressapp.git"
     targetRevision: dev
     path: "helm-values/percona"
   destination:
@@ -28,7 +28,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: "https://github.com/sumitgora/gcp-gke-demo.git"
+    repoURL: "https://github.com/sumitgora/wordpressapp.git"
     targetRevision: dev
     path: "helm-values/wordpress"
   destination:
@@ -51,7 +51,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: "https://github.com/sumitgora/gcp-gke-demo.git"
+    repoURL: "https://github.com/sumitgora/wordpressapp.git"
     targetRevision: dev
     path: "external-secrets"
   destination:
