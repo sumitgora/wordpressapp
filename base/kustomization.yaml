@@ -5,6 +5,7 @@ resources:
   - mysql-secret.yaml
   - mysql-headless-svc.yaml
   - mysql-statefulset.yaml
+  - filestore.yaml
   - wordpress-pvc.yaml
   - wordpress-deployment.yaml
   - wordpress-svc.yaml
