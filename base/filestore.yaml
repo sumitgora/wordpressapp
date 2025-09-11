@@ -6,6 +6,7 @@ metadata:
 provisioner: filestore.csi.storage.gke.io
 parameters:
   tier: standard
+  network: tf-gke-vpc
 reclaimPolicy: Retain
 volumeBindingMode: WaitForFirstConsumer
 allowVolumeExpansion: true
