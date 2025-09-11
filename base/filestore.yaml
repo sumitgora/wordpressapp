@@ -6,6 +6,6 @@ provisioner: filestore.csi.storage.gke.io
 parameters:
   tier: standard
   network: tf-gke-vpc
-reclaimPolicy: Retain
+reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer
 allowVolumeExpansion: true
