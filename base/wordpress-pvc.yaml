@@ -14,35 +14,14 @@
 #   storageClassName: filestore-sc
 
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: gcs-fuse-csi-pv
-spec:
-  accessModes:
-    - ReadWriteMany
-  capacity:
-    storage: 5Gi
-  storageClassName: fuse-sc
-  mountOptions:
-    - implicit-dirs
-  csi:
-    driver: gcsfuse.csi.storage.gke.io
-    volumeHandle: wordstore
-  claimRef:
-    name: wp-pv-claim
-    namespace: app
-
----
-
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: wp-pv-claim
-  namespace: app
 spec:
   accessModes:
-  - ReadWriteMany
+    - ReadWriteMany
+  storageClassName: gcs-bucket-sc
   resources:
     requests:
-      storage: 5Gi
-  storageClassName: fuse-sc
+      storage: 10Gi
+
