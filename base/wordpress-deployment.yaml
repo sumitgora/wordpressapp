@@ -15,6 +15,13 @@ spec:
       labels:
         app: wordpress
     spec:
+      initContainers:
+      - name: wait-for-filestore
+        image: busybox
+        command: ['sh', '-c', 'until [ -d /var/www/html ]; do echo "Waiting for Filestore..."; sleep 10; done']
+        volumeMounts:
+        - name: wordpress-persistent-storage
+          mountPath: /var/www/html
       containers:
       - name: wordpress
         image: wordpress:6.4-apache
@@ -38,6 +45,13 @@ spec:
             secretKeyRef:
               name: mysql-credentials
               key: MYSQL_DATABASE
+        volumeMounts:
+        - name: wordpress-persistent-storage
+          mountPath: /var/www/html
+      volumes:
+      - name: wordpress-persistent-storage
+        persistentVolumeClaim:
+          claimName: wp-pv-claim          
         # readinessProbe:
         #   httpGet:
         #     path: /
