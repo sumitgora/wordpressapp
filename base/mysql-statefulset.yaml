@@ -16,52 +16,72 @@ spec:
       labels:
         app: mysql
     spec:
+      nodeSelector:
+        iam.gke.io/gke-metadata-server-enabled: "true"
+      serviceAccountName: mysql-ksa # must be bound to GSA with Workload Identity
       terminationGracePeriodSeconds: 30
-      containers:
-      - name: mysql
-        image: mysql:8.0
-        ports:
-        - containerPort: 3306
-          name: mysql
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-credentials
-              key: MYSQL_ROOT_PASSWORD
-        - name: MYSQL_DATABASE
-          valueFrom:
-            secretKeyRef:
-              name: mysql-credentials
-              key: MYSQL_DATABASE
-        - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: mysql-credentials
-              key: MYSQL_USER
-        - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-credentials
-              key: MYSQL_PASSWORD
-        volumeMounts:
-        - name: mysql-data
-          mountPath: /var/lib/mysql
-        readinessProbe:
-          exec:
-            command:
+
+      # Init container to read GSM secrets from files and export them
+      initContainers:
+        - name: load-secrets
+          image: busybox
+          command:
             - sh
             - -c
-            - "mysqladmin ping -h 127.0.0.1 -u root -p$MYSQL_ROOT_PASSWORD"
-          initialDelaySeconds: 15
-          periodSeconds: 10
+            - |
+              echo "export MYSQL_ROOT_PASSWORD=$(cat /mnt/secrets/MYSQL_ROOT_PASSWORD)" >> /workdir/mysql-env.sh
+              echo "export MYSQL_DATABASE=$(cat /mnt/secrets/MYSQL_DATABASE)" >> /workdir/mysql-env.sh
+              echo "export MYSQL_USER=$(cat /mnt/secrets/MYSQL_USER)" >> /workdir/mysql-env.sh
+              echo "export MYSQL_PASSWORD=$(cat /mnt/secrets/MYSQL_PASSWORD)" >> /workdir/mysql-env.sh
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: /mnt/secrets
+            - name: env-workdir
+              mountPath: /workdir
+
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+              name: mysql
+          # Run MySQL with env vars sourced from /workdir/mysql-env.sh
+          command: ["sh", "-c"]
+          args: [". /workdir/mysql-env.sh && exec docker-entrypoint.sh mysqld"]
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+            - name: secrets-store-inline
+              mountPath: /mnt/secrets
+              readOnly: true
+            - name: env-workdir
+              mountPath: /workdir
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "mysqladmin ping -h 127.0.0.1 -u root -p$(cat /mnt/secrets/MYSQL_ROOT_PASSWORD)"
+            initialDelaySeconds: 15
+            periodSeconds: 10
+
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store-gke.csi.k8s.io # GKE-managed driver
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "mysql-gsm-secrets"
+        - name: env-workdir
+          emptyDir: {}
+
   volumeClaimTemplates:
-  - metadata:
-      name: mysql-data
-      annotations:
-        volume.beta.kubernetes.io/storage-class: "standard"
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 5Gi
+    - metadata:
+        name: mysql-data
+        annotations:
+          volume.beta.kubernetes.io/storage-class: "standard"
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi
