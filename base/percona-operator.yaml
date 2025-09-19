@@ -74,7 +74,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pxc-operator
-  namespace: pxc-operator
+  namespace: pxc-operator # Operator runs in its own namespace
 spec:
   replicas: 1
   selector:
@@ -91,3 +91,14 @@ spec:
           image: percona/percona-xtradb-cluster-operator:1.11.0
           command:
             - percona-xtradb-cluster-operator
+          env:
+            # Operator detects its own namespace
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+
+            # Namespace where the PXC cluster will run
+            - name: WATCH_NAMESPACE
+              value: "pxc" # This must match your cluster namespace
+
