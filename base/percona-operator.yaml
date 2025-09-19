@@ -100,5 +100,5 @@ spec:
 
             # Namespace where the PXC cluster will run
             - name: WATCH_NAMESPACE
-              value: "pxc" # This must match your cluster namespace
+              value: "app" # This must match your cluster namespace
 
