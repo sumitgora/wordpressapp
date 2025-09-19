@@ -4,9 +4,13 @@ resources:
   - namespace.yaml
   - serviceaccount.yaml
   - filestore.yaml
-  - mysql-secret.yaml
-  - mysql-headless-svc.yaml
-  - mysql-statefulset.yaml
+  # - mysql-secret.yaml
+  # - mysql-headless-svc.yaml
+  # - mysql-statefulset.yaml
+  - percona-operator.yaml
+  - percona-secret.yaml
+  - percona-cluster.yaml
+  - percona-svc.yaml
   - wordpress-pvc.yaml
   - wordpress-deployment.yaml
   - wordpress-svc.yaml
