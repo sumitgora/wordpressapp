@@ -6,6 +6,8 @@ metadata:
 spec:
   parentRefs:
     - name: wordpress-gateway
+  hostnames:
+    - wordpress.example.com   # replace with your real domain    
   rules:
     - matches:
         - path:
