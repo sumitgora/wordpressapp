@@ -4,8 +4,6 @@ resources:
   - serviceaccount.yaml
   - secret.yaml
   - filestore.yaml
-  - wordpress-config.yaml
-  - wordpress-policy.yaml
   - wordpress-pvc.yaml
   - wordpress-deployment.yaml
   - wordpress-svc.yaml
