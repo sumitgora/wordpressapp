@@ -14,3 +14,9 @@ spec:
       backendRefs:
         - name: wordpress-service
           port: 80
+          filters:
+            - type: ExtensionRef
+              extensionRef:
+                group: networking.gke.io
+                kind: HealthPolicy
+                name: wordpress-health-policy

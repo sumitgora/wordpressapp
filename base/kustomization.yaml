@@ -5,7 +5,7 @@ resources:
   - secret.yaml
   - filestore.yaml
   - wordpress-config.yaml
-  - wordpress-backend.yaml
+  - wordpress-policy.yaml
   - wordpress-pvc.yaml
   - wordpress-deployment.yaml
   - wordpress-svc.yaml
