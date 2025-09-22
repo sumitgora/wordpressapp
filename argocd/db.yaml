@@ -1,16 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: wordpress-app
+  name: pxc-db
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/sumitgora/wordpressapp.git'
-    targetRevision: dev
-    path: base
+    repoURL: https://percona.github.io/percona-helm-charts/
+    chart: pxc-db
+    targetRevision: 1.18.0     # Chart version
+    helm:
+      releaseName: pxc-db
   destination:
-    server: 'https://kubernetes.default.svc'
+    server: https://kubernetes.default.svc
     namespace: app
   syncPolicy:
     automated:
