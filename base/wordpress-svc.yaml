@@ -5,9 +5,11 @@ metadata:
   namespace: app
   labels:
     app: wordpress
+  annotations:
+    cloud.google.com/backend-config: '{"default": "wordpress-backendconfig"}'    
 spec:
-  # type: ClusterIP # or NodePort  (Ingress works with both)
-  type: LoadBalancer # For Network LB (only for first time)
+  type: ClusterIP # or NodePort  (Ingress works with both)
+  # type: LoadBalancer # For Network LB (only for first time)
   selector:
     app: wordpress
   ports:

@@ -68,6 +68,9 @@ spec:
             - name: secrets-store-inline
               mountPath: /mnt/secrets
               readOnly: true
+            - name: wordpress-healthz
+              mountPath: /var/www/html/healthz.php
+              subPath: healthz.php    
 
       volumes:
         - name: wordpress-persistent-storage
@@ -81,3 +84,6 @@ spec:
             readOnly: true
             volumeAttributes:
               secretProviderClass: "mysql-gsm-secrets"
+        - name: wordpress-healthz
+          configMap:
+            name: wordpress-healthz
