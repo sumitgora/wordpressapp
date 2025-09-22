@@ -1,0 +1,39 @@
+apiVersion: pxc.percona.com/v1-11-0
+kind: PerconaXtraDBCluster
+metadata:
+  name: my-cluster
+  namespace: app
+spec:
+  crVersion: 1.11.0
+  secretsName: my-cluster-secrets
+  sslSecretName: my-cluster-ssl
+  sslInternalSecretName: my-cluster-ssl-internal
+  allowUnsafeConfigurations: false
+
+  pxc:
+    size: 3
+    image: percona/percona-xtradb-cluster:8.0.34-26.1
+    resources:
+      requests:
+        memory: 1G
+        cpu: 500m
+    volumeSpec:
+      persistentVolumeClaim:
+        storageClassName: standard-rwo   # GKE default PD
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 20Gi
+
+  haproxy:
+    enabled: true
+    size: 2
+    image: percona/percona-xtradb-cluster-operator:haproxy
+    resources:
+      requests:
+        memory: 256M
+        cpu: 200m
+
+  backup:
+    enabled: true
+    image: percona/percona-xtradb-cluster-operator:backup

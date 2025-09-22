@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-external
+  namespace: app
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:
+    app.kubernetes.io/component: haproxy
+    app.kubernetes.io/instance: my-cluster
