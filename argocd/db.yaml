@@ -11,42 +11,6 @@ spec:
     targetRevision: 1.18.0     # Chart version
     helm:
       releaseName: pxc-db
-      values: |
-        haproxy:
-          enabled: false      
-        proxysql:
-          enabled: true
-        persistence:
-          size: 20Gi
-
-        secrets:
-          # Instead of static values, tell the operator to read from mounted files
-          passwords:
-          root: /mnt/secrets/MYSQL_ROOT_PASSWORD
-          wordpress: /mnt/secrets/MYSQL_PASSWORD  
-        
-        users:
-        - name: wordpress
-          host: "%"
-          password: /mnt/secrets/MYSQL_PASSWORD   # pulled from GSM
-          privileges: ["ALL PRIVILEGES"]
-          authPlugin: mysql_native_password
-          databases:
-            - /mnt/secrets/MYSQL_DATABASE        # pulled from GSM
-
-        extraVolumes:
-        - name: secrets-store-inline
-          csi:
-          driver: secrets-store-gke.csi.k8s.io
-          readOnly: true
-          volumeAttributes:
-            secretProviderClass: "mysql-gsm-secrets"
-
-        extraVolumeMounts:
-        - name: secrets-store-inline
-          mountPath: /mnt/secrets
-          readOnly: true
-
   destination:
     server: https://kubernetes.default.svc
     namespace: app
