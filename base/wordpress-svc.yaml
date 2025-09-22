@@ -6,8 +6,8 @@ metadata:
   labels:
     app: wordpress
 spec:
-  # type: ClusterIP # or NodePort  (Ingress works with both)
-  type: LoadBalancer # For Network LB (only for first time)
+  type: ClusterIP # or NodePort  (Ingress works with both)
+  # type: LoadBalancer # For Network LB (only for first time)
   selector:
     app: wordpress
   ports:
