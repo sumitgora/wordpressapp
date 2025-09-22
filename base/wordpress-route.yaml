@@ -5,9 +5,7 @@ metadata:
   namespace: app
 spec:
   parentRefs:
-    - name: wordpress-gateway
-  hostnames:
-    - wordpress.example.com   # replace with your real domain    
+    - name: wordpress-gateway  
   rules:
     - matches:
         - path:
