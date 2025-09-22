@@ -11,6 +11,13 @@ spec:
     targetRevision: 1.18.0     # Chart version
     helm:
       releaseName: pxc-db
+      values: |
+        haproxy:
+          enabled: false      
+        proxysql:
+          enabled: true
+        persistence:
+          size: 20Gi                
   destination:
     server: https://kubernetes.default.svc
     namespace: app
