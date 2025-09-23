@@ -4,10 +4,29 @@ metadata:
   name: wordpress-service
   namespace: app
   labels:
-    app: wordpress
+    app: wordpress 
 spec:
   type: ClusterIP # or NodePort  (Ingress works with both)
   # type: LoadBalancer # For Network LB (only for first time)
+  selector:
+    app: wordpress
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress-service-nlb
+  namespace: app
+  labels:
+    app: wordpress 
+spec:
+  # type: ClusterIP # or NodePort  (Ingress works with both)
+  type: LoadBalancer # For Network LB (only for first time)
   selector:
     app: wordpress
   ports:

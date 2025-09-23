@@ -54,7 +54,7 @@ spec:
             - containerPort: 80
           env:
             - name: WORDPRESS_DB_HOST
-              value: "mysql-0.mysql-headless.app.svc.cluster.local:3306"
+              value: "pxc-db-haproxy.app.svc.cluster.local:3306"
           command: ["sh", "-c"]
           args:
             [
@@ -67,7 +67,7 @@ spec:
               mountPath: /workdir
             - name: secrets-store-inline
               mountPath: /mnt/secrets
-              readOnly: true
+              readOnly: true 
 
       volumes:
         - name: wordpress-persistent-storage
